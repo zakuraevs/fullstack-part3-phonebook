@@ -82,6 +82,12 @@ app.post('/api/persons', (request, response) => {
         })
     }
 
+    if (persons.map(p => p.name).includes(body.name)) {
+        return response.status(400).json({
+            error: 'name must be unique'
+        })
+    }
+
     var id =  generateId()
     while(persons.map(p => p.id).includes(id)) id = generateId()
 
