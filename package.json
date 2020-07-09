@@ -1,0 +1,27 @@
+{
+  "name": "fullstack-part3-phonebook",
+  "version": "1.0.0",
+  "description": "Fullstack web development course exercise submissions for part 3 Phonebook project",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zakuraevs/fullstack-part3-phonebook.git"
+  },
+  "author": "Sergey Zakuraev",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zakuraevs/fullstack-part3-phonebook/issues"
+  },
+  "homepage": "https://github.com/zakuraevs/fullstack-part3-phonebook#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
+}
