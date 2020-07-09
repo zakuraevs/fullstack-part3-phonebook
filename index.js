@@ -1,7 +1,12 @@
 const express = require('express')
+var morgan = require('morgan')
 const app = express()
 
 app.use(express.json())
+
+morgan.token('pdata', function (req) { return JSON.stringify(req.body) })
+
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms  :pdata '))
 
 let persons = [
     {
@@ -47,13 +52,10 @@ app.get('/info', (req, res) => {
 //SPECIFIC PERSON BY ID
 app.get('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
-    console.log(id)
     //const note = notes.find(note => note.id === id)
     const person = persons.find(p => {
-        console.log(p.id, typeof p.id, id, typeof id, p.id === id)
         return p.id === id
     })
-    console.log(person)
 
     if (person) {
         response.json(person)
@@ -102,6 +104,13 @@ app.post('/api/persons', (request, response) => {
     response.json(note)
 
 })
+
+//MIDDLEWARE
+const unknownEndpoint = (request, response) => {
+    response.status(404).send({ error: 'unknown endpoint' })
+}
+
+app.use(unknownEndpoint)
 
 
 
