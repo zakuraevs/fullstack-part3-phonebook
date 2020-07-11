@@ -11,6 +11,7 @@ app.use(express.static('build'))
 app.use(express.json())
 
 mongoose.set('useFindAndModify', false)
+mongoose.set('useCreateIndex', true)
 
 morgan.token('pdata', function (req) { return JSON.stringify(req.body) })
 
@@ -28,7 +29,7 @@ app.get('/api/persons', (req, res) => {
     })
 })
 
-//INFO PAGE
+//INFO PAGE 
 app.get('/info', (req, res) => {
     let numOfEntries = 0
 
@@ -55,7 +56,7 @@ app.get('/api/persons/:id', (request, response, next) => {
 })
 
 //ADD NEW PERSON
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
     const body = request.body
 
     if (body.name === undefined || body.number === undefined) {
@@ -67,9 +68,11 @@ app.post('/api/persons', (request, response) => {
         phone: body.number,
     })
 
-    person.save().then(savedPerson => {
+    person.save()
+    .then(savedPerson => {
         response.json(savedPerson)
     })
+    .catch(error => next(error))
 })
 
 //DELETE SPECIFIC PERSON BY ID
@@ -106,11 +109,14 @@ app.use(unknownEndpoint)
 
 const errorHandler = (error, request, response, next) => {
     console.error(error.message)
+    console.log(error.name)
     console.log("DANGGG, BAD REQUEST")
   
     if (error.name === 'CastError') {
-      return response.status(400).send({ error: 'malformatted id' })
-    } 
+        return response.status(400).send({ error: 'malformatted id' })
+    } else if (error.name === 'ValidationError') {
+        return response.status(409).send({ error: 'Mongoose validation failed. Probably name already exists or params too short' })
+    }
   
     next(error)
   }

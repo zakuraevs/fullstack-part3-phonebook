@@ -1,4 +1,6 @@
 const mongoose = require('mongoose')
+const uniqueValidator = require('mongoose-unique-validator');
+
 
 //This doesnt work on heroku
 //Because url is in an .env file
@@ -17,9 +19,18 @@ mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
     })
 
 const personSchema = new mongoose.Schema({
-    name: String,
-    phone: String,
+    name: {
+        type: String,
+        unique: true,
+        minlength: 3
+    },
+    phone: {
+        type: String,
+        minlength: 8
+    },
 })
+
+personSchema.plugin(uniqueValidator)
 
 personSchema.set('toJSON', {
     transform: (document, returnedObject) => {
