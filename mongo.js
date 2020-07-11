@@ -21,7 +21,7 @@ const password = process.argv[2]
 const url =
     `mongodb+srv://testUser2:${password}@cluster0.kfliw.mongodb.net/phonebook-app?retryWrites=true&w=majority`
 
-//Connect to mongo and create the phonebook-app database using the url above  
+//Connect to mongo and create the phonebook-app database using the url above
 mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
 
 //Mongoose schema for adding people
@@ -48,7 +48,7 @@ if (process.argv.length === 5) {
         id: id,
     })
 
-    person.save().then(result => {
+    person.save().then(() => {
         console.log(`added ${process.argv[3]} number ${process.argv[4]} to phonebook`)
         mongoose.connection.close()
     })

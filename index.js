@@ -29,16 +29,14 @@ app.get('/api/persons', (req, res) => {
     })
 })
 
-//INFO PAGE 
+//INFO PAGE
 app.get('/info', (req, res) => {
-    let numOfEntries = 0
 
     Person.countDocuments({}).then(count => {
         res.send(`<div>Phonebook has info for ${count} people</div>
         <br>
         <div>${new Date()}</div>`)
       })
-    
 })
 
 //GET SPECIFIC PERSON BY ID
@@ -48,8 +46,8 @@ app.get('/api/persons/:id', (request, response, next) => {
       if (person) {
         response.json(person)
       } else {
-        console.log("DANGGG, NO SUCH PERSON FOUND IN DATABASE")
-        response.status(404).end() 
+        console.log('DANGGG, NO SUCH PERSON FOUND IN DATABASE')
+        response.status(404).end()
       }
     })
     .catch(error => next(error))
@@ -86,12 +84,12 @@ app.delete('/api/persons/:id', (request, response, next) => {
 
 app.put('/api/persons/:id', (request, response, next) => {
     const body = request.body
-  
+
     const person = {
         name: body.name,
         phone: body.number,
     }
-  
+
     Person.findByIdAndUpdate(request.params.id, person, { new: true })
       .then(updatedPerson => {
         response.json(updatedPerson)
@@ -110,28 +108,18 @@ app.use(unknownEndpoint)
 const errorHandler = (error, request, response, next) => {
     console.error(error.message)
     console.log(error.name)
-    console.log("DANGGG, BAD REQUEST")
-  
+    console.log('DANGGG, BAD REQUEST')
+
     if (error.name === 'CastError') {
         return response.status(400).send({ error: 'malformatted id' })
     } else if (error.name === 'ValidationError') {
         return response.status(409).send({ error: 'Mongoose validation failed. Probably name already exists or params too short' })
     }
-  
+
     next(error)
   }
-  
+
   app.use(errorHandler)
-
-
-//HELPER FUNCTIONS
-
-//WILL NOT WORK IF OUT OF IDS
-const generateId = () => {
-    const max = 10000
-    return Math.floor(Math.random() * max)
-}
-
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
